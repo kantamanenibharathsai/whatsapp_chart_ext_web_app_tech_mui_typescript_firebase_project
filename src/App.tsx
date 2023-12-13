@@ -11,8 +11,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/" element={<SignIn />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/" element={<Home />} />
         <Route path="/chat" element={<MobileChat />} />
       </Routes>
     </BrowserRouter>

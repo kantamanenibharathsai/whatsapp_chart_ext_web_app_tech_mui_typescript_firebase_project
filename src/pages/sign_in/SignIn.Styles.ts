@@ -177,6 +177,11 @@ const signInStyles = {
     color: "#898989",
     fontWeight: "500",
   },
+
+  errorMsg: {
+    color: "red",
+    marginTop: "-20px",
+  },
 };
 
 export default signInStyles;

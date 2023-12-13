@@ -6,8 +6,11 @@ const signUpStyles = {
     display: "flex",
     flexDirection: "row",
     // alignItems: "strech",
-    minHeight: "100vh",
+    // height: "100vh",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#2C7A7B",
+    minHeight: "100vh",
   },
 
   childContainer: {
@@ -16,15 +19,18 @@ const signUpStyles = {
     display: "grid",
     gridTemplateColumns: { xs: "100%", sm: "100%", md: "40% 1fr" },
     gridGap: "20px",
-    // border: "2px solid green",
+    // border: "8px solid red",
     minHeight: "95vh",
   },
 
   leftContainer: {
     width: "100%",
-    // border: "2px solid red",
-    display: "flex",
-    flexDirection: "column",
+    // border: "6px solid blue",
+    // display: "flex",
+    // flexDirection: "column",
+    // overflow: "auto scroll",
+    bgcolor: "white",
+    height: "100%",
   },
 
   whatsAppTopContainer: {
@@ -34,7 +40,7 @@ const signUpStyles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    height: "33%",
+    height: { xs: "28%", md: "33%" },
   },
 
   whatsAppLogoContainer: {
@@ -58,7 +64,7 @@ const signUpStyles = {
 
   createAccountBottomContainer: {
     backgroundColor: "#ffffff",
-    height: "67%",
+    height: { xs: "72%", md: "67%" },
     // border: "3px solid yellow",
     paddingTop: "25px",
   },
@@ -71,7 +77,7 @@ const signUpStyles = {
 
   createAccountText: {
     color: "#29746C",
-    fontSize: "24px",
+    fontSize: { xs: "19px", sm: "21px", md: "24px" },
     fontWeight: "500",
     textAlign: "center",
   },
@@ -84,7 +90,14 @@ const signUpStyles = {
   formContainer: {
     // border: "2px solid red",
     width: "100%",
-    marginTop: "25px",
+    marginTop: { xs: "14px", sm: "14px", md: "18px" },
+  },
+
+  inputFieldContainer: {
+    display: "flex",
+    flexDirection: "column",
+    // border: "2px solid red",
+    gap: "8px",
   },
 
   inputField: {
@@ -109,21 +122,26 @@ const signUpStyles = {
 
   phoneNumberCode: {
     width: "50px",
-    // border: "2px solid green",
+    //border: "2px solid green",
     // paddingTop: "20px",
     color: "#29746C",
+    fontSize: "15px",
   },
 
   visibIcon: {
     color: "#43857E",
+    width: "8px",
+    height: "8px",
+    marginRight: "1px",
   },
 
   signUpBtn: {
-    marginTop: "170px",
+    marginTop: { xs: "20px", xl: "35px" },
+    marginBottom: { xl: "18px" },
     textTransform: "capitalize",
     bgcolor: "#1BD741",
     "&:hover": {
-      bgcolor: "#1BD741",
+      background: "#1BD741",
     },
   },
 
@@ -133,13 +151,12 @@ const signUpStyles = {
   },
 
   signUpIcons: {
-    width: "35px",
-    height: "35px",
+    width: "27px",
+    height: "27px",
   },
 
   signUpWithText: {
-    mt: "2rem",
-    mb: "2rem",
+    my: { xs: "2rem", md: "1.2rem", lg: "1rem" },
     fontSize: "14px",
     color: "#A7A7A7",
   },
@@ -147,8 +164,7 @@ const signUpStyles = {
   thirdPartySignUp: {},
 
   alreadyText: {
-    mt: "2rem",
-    mb: "2rem",
+    my: { xs: "2rem", md: "1.2rem" },
     fontSize: "14px",
     color: "#3D746C",
     textAlign: "center",
@@ -398,7 +414,7 @@ const signUpStyles = {
   errorMsgText: {
     fontFamily: "Poppins, sans-serif",
     fontWeight: "300",
-    fontSize: "12px",
+    fontSize: { xs: "9px", lg: "10px" },
     color: "red",
   },
 };

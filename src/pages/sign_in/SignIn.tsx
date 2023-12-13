@@ -18,9 +18,10 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Link, useNavigate } from "react-router-dom";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../../Firebase-Config";
+// import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 // import { useNavigate } from "react-router-dom";
+import { auth } from "../../Firebase-Config";
 
 interface SignUpFormDataInterface {
   email: string;
@@ -36,6 +37,7 @@ const SignIn: React.FC = () => {
     isPasswordVisible: false,
     authenticateText: "",
   });
+  const [errorMsg, setErrorMsg] = useState<String>("");
 
   const navigate = useNavigate();
 
@@ -93,14 +95,22 @@ const SignIn: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // authenticateUser();
+    // const auth = getAuth();
+    signInWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigate("/");
+      })
+      .catch((error) => {
+        setErrorMsg("*user doesn't exist, Please create an account");
+      });
   };
 
-  const loginHandlerWithGoogleIcon = async () => {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
-    navigate("/home");
-  };
+  // const loginHandlerWithGoogleIcon = async () => {
+  //   const provider = new GoogleAuthProvider();
+  //   await signInWithPopup(auth, provider);
+  //   navigate("/home");
+  // };
 
   return (
     <Box sx={signInStyles.mainContainer}>
@@ -119,7 +129,11 @@ const SignIn: React.FC = () => {
               <Typography component="h1" sx={signInStyles.createAccountText}>
                 Login
               </Typography>
-              <FormControl sx={signInStyles.formContainer}>
+              <FormControl
+                sx={signInStyles.formContainer}
+                onSubmit={handleSubmit}
+                component="form"
+              >
                 <Stack direction={"column"} spacing={4}>
                   <TextField
                     sx={signInStyles.inputField}
@@ -157,9 +171,18 @@ const SignIn: React.FC = () => {
                       ),
                     }}
                   />
-                  <Button variant="contained" sx={signInStyles.signInBtn}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={signInStyles.signInBtn}
+                  >
                     Login
                   </Button>
+                  {errorMsg && (
+                    <Typography sx={signInStyles.errorMsg}>
+                      {errorMsg}
+                    </Typography>
+                  )}
                 </Stack>
               </FormControl>
 
@@ -179,7 +202,7 @@ const SignIn: React.FC = () => {
                 </IconButton>
                 <IconButton
                   sx={signInStyles.iconButton}
-                  onClick={loginHandlerWithGoogleIcon}
+                  // onClick={loginHandlerWithGoogleIcon}
                 >
                   <GoogleIcon sx={signInStyles.signInIcons} />
                 </IconButton>

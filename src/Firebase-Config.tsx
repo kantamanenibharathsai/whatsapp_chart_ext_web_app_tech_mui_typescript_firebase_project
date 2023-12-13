@@ -1,18 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDN-ENeF73lmkGS20PowOda-5V_pMayJPY",
-  authDomain: "learningfirebase-21.firebaseapp.com",
-  databaseURL: "https://learningfirebase-21-default-rtdb.firebaseio.com",
-  projectId: "learningfirebase-21",
-  storageBucket: "learningfirebase-21.appspot.com",
-  messagingSenderId: "566446176690",
-  appId: "1:566446176690:web:374d70e00689addf780cab",
-  measurementId: "G-Z4XC8XBF88",
+  apiKey: "AIzaSyDXcxRfR0TM-metJlpVaFOBowW2X0eqAig",
+  authDomain: "whatsapp-chat-crud.firebaseapp.com",
+  projectId: "whatsapp-chat-crud",
+  storageBucket: "whatsapp-chat-crud.appspot.com",
+  messagingSenderId: "1027715081358",
+  appId: "1:1027715081358:web:94a59ca9f27bb5fe8255df",
+  measurementId: "G-XMTKE19YH0",
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 export const auth = getAuth(app);

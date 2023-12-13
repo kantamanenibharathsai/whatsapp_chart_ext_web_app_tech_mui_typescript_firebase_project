@@ -19,6 +19,8 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Link } from "react-router-dom";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../Firebase-Config";
 // import { useNavigate } from "react-router-dom";
 
 interface SignUpFormDataInterface {
@@ -27,16 +29,21 @@ interface SignUpFormDataInterface {
   isPasswordVisible: boolean;
   authenticateText: string;
   phoneNumber: string;
+  isPhoneNoValid: boolean;
+  isEmailValid: boolean;
+  isPasswordValid: boolean;
 }
 
 const SignUp: React.FC = () => {
-  console.log("login");
   const [formData, setFormData] = useState<SignUpFormDataInterface>({
     email: "",
     password: "",
     isPasswordVisible: false,
     authenticateText: "",
     phoneNumber: "",
+    isPhoneNoValid: false,
+    isEmailValid: false,
+    isPasswordValid: false,
   });
 
   const togglePasswordVisibility = () => {
@@ -50,11 +57,29 @@ const SignUp: React.FC = () => {
     const { name, value } = e.target;
 
     if (name === "phoneNumber") {
-      setFormData((prevFormObj) => ({ ...prevFormObj, phoneNumber: value }));
+      const isValidPhoneNumber = /^\d{10}$/.test(value);
+      setFormData((prevFormObj) => ({
+        ...prevFormObj,
+        phoneNumber: value,
+        isPhoneNoValid: isValidPhoneNumber,
+      }));
     } else if (name === "email") {
-      setFormData((prevFormObj) => ({ ...prevFormObj, email: value }));
+      const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      setFormData((prevFormObj) => ({
+        ...prevFormObj,
+        email: value,
+        isEmailValid: isValidEmail,
+      }));
     } else {
-      setFormData((prevFormObj) => ({ ...prevFormObj, password: value }));
+      const isValidPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(
+        formData.password
+      );
+
+      setFormData((prevFormObj) => ({
+        ...prevFormObj,
+        password: value,
+        isPasswordValid: isValidPassword,
+      }));
     }
   };
 
@@ -95,7 +120,18 @@ const SignUp: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // authenticateUser();
+    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((userCredential) => {
+        console.log(userCredential);
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        if (errorMessage) {
+        }
+      });
   };
 
   return (
@@ -115,77 +151,107 @@ const SignUp: React.FC = () => {
               <Typography component="h1" sx={signUpStyles.createAccountText}>
                 Create a New Account
               </Typography>
-              <FormControl sx={signUpStyles.formContainer}>
-                <Stack direction={"column"} spacing={4}>
-                  <TextField
-                    sx={signUpStyles.inputField}
-                    id="phone"
-                    label="Phone"
-                    variant="standard"
-                    type="number"
-                    name="phoneNumber"
-                    onChange={handleInputChange}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <NativeSelect
-                            defaultValue={91}
-                            inputProps={{
-                              name: "phoneNumberCodes",
-                              id: "uncontrolled-native",
-                            }}
-                            sx={signUpStyles.phoneNumberCode}
-                          >
-                            <option value={91}>+91</option>
-                            <option value={92}>+92</option>
-                            <option value={93}>+93</option>
-                          </NativeSelect>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    sx={signUpStyles.inputField}
-                    id="email"
-                    label="Email"
-                    variant="standard"
-                    type="email"
-                    name="email"
-                    onChange={handleInputChange}
-                  />
-                  <TextField
-                    sx={signUpStyles.inputField}
-                    id="password"
-                    label="Password"
-                    variant="standard"
-                    type={formData.isPasswordVisible ? "text" : "password"}
-                    name="password"
-                    onChange={handleInputChange}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={togglePasswordVisibility}
-                            edge="end"
-                            sx={signUpStyles.visibIcon}
-                          >
-                            {formData.isPasswordVisible ? (
-                              <VisibilityOffIcon />
-                            ) : (
-                              <VisibilityIcon />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <Button variant="contained" sx={signUpStyles.signUpBtn}>
-                    Sign Up
-                  </Button>
+              <FormControl
+                onSubmit={handleSubmit}
+                component="form"
+                sx={signUpStyles.formContainer}
+              >
+                <Stack direction={"column"} spacing={1}>
+                  <Box sx={signUpStyles.inputFieldContainer}>
+                    <TextField
+                      sx={signUpStyles.inputField}
+                      id="phone"
+                      label="Phone"
+                      variant="standard"
+                      type="number"
+                      name="phoneNumber"
+                      onChange={handleInputChange}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <NativeSelect
+                              defaultValue={91}
+                              inputProps={{
+                                name: "phoneNumberCodes",
+                                id: "uncontrolled-native",
+                              }}
+                              sx={signUpStyles.phoneNumberCode}
+                            >
+                              <option value={91}>+91</option>
+                              <option value={92}>+92</option>
+                              <option value={93}>+93</option>
+                            </NativeSelect>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    {!formData.isPhoneNoValid && (
+                      <Typography sx={signUpStyles.errorMsgText}>
+                        * Please enter a valid 10-digit phone number
+                      </Typography>
+                    )}
+                  </Box>
+                  <Box sx={signUpStyles.inputFieldContainer}>
+                    <TextField
+                      sx={signUpStyles.inputField}
+                      id="email"
+                      label="Email"
+                      variant="standard"
+                      type="email"
+                      name="email"
+                      onChange={handleInputChange}
+                    />
+                    {!formData.isEmailValid && (
+                      <Typography sx={signUpStyles.errorMsgText}>
+                        * Please enter a valid email
+                      </Typography>
+                    )}
+                  </Box>
+                  <Box sx={signUpStyles.inputFieldContainer}>
+                    <TextField
+                      sx={signUpStyles.inputField}
+                      id="password"
+                      label="Password"
+                      variant="standard"
+                      type={formData.isPasswordVisible ? "text" : "password"}
+                      name="password"
+                      onChange={handleInputChange}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={togglePasswordVisibility}
+                              edge="end"
+                              sx={signUpStyles.visibIcon}
+                            >
+                              {!formData.isPasswordVisible ? (
+                                <VisibilityOffIcon />
+                              ) : (
+                                <VisibilityIcon />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    {!formData.isPasswordValid && (
+                      <Typography sx={signUpStyles.errorMsgText}>
+                        * Password must contain atleast one uppercase letter,
+                        one lowercase letter, one digit and one special
+                        character
+                      </Typography>
+                    )}
+                  </Box>
                 </Stack>
+                <Button
+                  variant="contained"
+                  sx={signUpStyles.signUpBtn}
+                  type="submit"
+                >
+                  Sign Up
+                </Button>
               </FormControl>
-
               <Divider sx={signUpStyles.signUpWithText}>or signup with</Divider>
               <Stack
                 sx={signUpStyles.thirdPartySignUp}
